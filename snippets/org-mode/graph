@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: graph
+# key: graph
+# --
+#+begin_src dot :file ${1:./assets/image/}${2:xxx}.png :cmdline -Kdot -Tpng :exports ${3:results}
+$0
+#+end_src

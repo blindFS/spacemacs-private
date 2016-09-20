@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: uml
+# key: uml
+# --
+#+begin_src plantuml :file ${1:./assets/image/}${2:xxx}.png :exports ${3:results}
+$0
+#+end_src

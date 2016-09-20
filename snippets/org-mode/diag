@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: diag
+# key: diag
+# --
+
+#+name: ${1:dot-input}
+#+BEGIN_SRC emacs-lisp :var table=${2:class-table} :results output :exports none
+(dia-from-table table)
+#+END_SRC
+
+#+BEGIN_SRC dot :file ${3:./assets/image/}${4:xxx}.png :var input=$1 :exports results
+digraph {
+    graph [rankdir = "LR"];
+    $input
+}
+#+END_SRC

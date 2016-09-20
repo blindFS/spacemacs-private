@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: sh
+# key: sh
+# --
+#+begin_src sh :results output
+$0
+#+end_src

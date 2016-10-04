@@ -12,7 +12,7 @@
 
 (defvar bindings-packages
   '(
-    ;; package bindingss go here
+    evil
     )
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
@@ -21,11 +21,13 @@ which require an initialization must be listed explicitly in the list.")
   "List of packages to exclude.")
 
 ;; For each package, define a function bindings/init-<package-bindings>
-;;
-;; (defun bindings/init-my-package ()
-;;   "Initialize my package"
-;;   )
-;;
+
+(defun bindings/post-init-evil ()
+  (evil-define-key 'normal global-map (kbd "gh") 'beginning-of-line)
+  (evil-define-key 'normal global-map (kbd "gl") 'end-of-line)
+  (evil-define-key 'normal global-map (kbd "S") 'avy-goto-word-or-subword-1)
+  )
+
 ;; Often the body of an initialize function uses `use-package'
 ;; For more info on `use-package', see readme:
 ;; https://github.com/jwiegley/use-package

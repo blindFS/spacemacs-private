@@ -52,13 +52,7 @@
       (add-hook 'lisp-mode-hook       #'enable-paredit-mode)
       (add-hook 'scheme-mode-hook     #'enable-paredit-mode)
       (add-hook 'racket-mode-hook     #'enable-paredit-mode)
-      (eval-after-load 'evil-mode
-        (progn
-          (define-key evil-insert-state-map (kbd "C-d") 'paredit-splice-sexp)
-          (define-key evil-normal-state-map (kbd "<") 'paredit-backward-slurp-sexp)
-          (define-key evil-normal-state-map (kbd ">") 'paredit-forward-slurp-sexp)
-          (define-key evil-normal-state-map (kbd "C-\>") 'paredit-backward-barf-sexp)
-          (define-key evil-normal-state-map (kbd "C-\<") 'paredit-forward-barf-sexp))))))
+      )))
 
 (defun fp/init-evil-paredit ()
   (use-package evil-paredit
@@ -68,7 +62,13 @@
       (add-hook 'emacs-lisp-mode-hook #'evil-paredit-mode)
       (add-hook 'lisp-mode-hook       #'evil-paredit-mode)
       (add-hook 'scheme-mode-hook     #'evil-paredit-mode)
-      (add-hook 'racket-mode-hook     #'evil-paredit-mode))))
+      (add-hook 'racket-mode-hook     #'evil-paredit-mode)
+      (evil-define-key 'insert evil-paredit-mode-map (kbd "C-d") 'paredit-splice-sexp)
+      (evil-define-key 'normal evil-paredit-mode-map (kbd "<") 'paredit-backward-slurp-sexp)
+      (evil-define-key 'normal evil-paredit-mode-map (kbd ">") 'paredit-forward-slurp-sexp)
+      (evil-define-key 'normal evil-paredit-mode-map (kbd "C-\>") 'paredit-backward-barf-sexp)
+      (evil-define-key 'normal evil-paredit-mode-map (kbd "C-\<") 'paredit-forward-barf-sexp)
+      )))
 
 ;; For each package, define a function fp/init-<package-fp>
 ;;

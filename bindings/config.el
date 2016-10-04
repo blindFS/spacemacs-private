@@ -22,15 +22,3 @@
                            kill-star-buffers-except))
               (kill-buffer buf))))
         (buffer-list)))
-
-(evil-define-key 'normal global-map (kbd "gh") 'beginning-of-line)
-(evil-define-key 'normal global-map (kbd "gl") 'end-of-line)
-
-(define-key evil-normal-state-map (kbd "SPC B") 'switch-to-buffer)
-(define-key evil-normal-state-map (kbd "[ b") 'previous-buffer)
-(define-key evil-normal-state-map (kbd "] b") 'next-buffer)
-(define-key evil-normal-state-map (kbd "g p") (kbd "` [ v ` ]"))
-
-(define-key evil-normal-state-map (kbd "s") 'avy-goto-word-or-subword-1)
-
-(define-key minibuffer-local-map (kbd "C-w") 'backward-kill-word)

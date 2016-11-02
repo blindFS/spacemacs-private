@@ -14,6 +14,7 @@
   '(
     graphviz-dot-mode
     gnuplot-mode
+    org-ref
     )
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
@@ -32,6 +33,16 @@ which require an initialization must be listed explicitly in the list.")
   (use-package gnuplot-mode
     :ensure t
     :mode "\\.plt"))
+
+(defun orgme/post-init-org-ref ()
+  (setq
+   org-ref-bibliography-notes "~/Dropbox/org/notes/papers.org"
+   org-ref-default-bibliography '("~/Dropbox/org/notes/papers.bib")
+   org-ref-pdf-directory "~/Dropbox/Papers/"
+   bibtex-completion-bibliography "~/Dropbox/org/notes/papers.bib"
+   bibtex-completion-library-path "~/Dropbox/Papers/"
+   bibtex-completion-notes-path "~/Dropbox/org/notes/")
+  )
 
 ;; Often the body of an initialize function uses `use-package'
 ;; For more info on `use-package', see readme:

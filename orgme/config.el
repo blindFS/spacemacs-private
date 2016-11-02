@@ -17,6 +17,7 @@
    (unless (file-exists-p org-directory)
      (make-directory org-directory))
 
+   (setq org-tags-column -120)
    (setq org-log-done t)
    (setq org-completion-use-ido t)
 
@@ -101,17 +102,23 @@
       (sh . t)
       (R . t)
       (scala . t)
+      (ditaa . t)
       (gnuplot . t)
       (plantuml . t)))
    (add-to-list 'org-src-lang-modes (quote ("dot" . graphviz-dot)))
    (add-to-list 'org-src-lang-modes (quote ("dot2tex" . graphviz-dot)))
    (add-to-list 'org-src-lang-modes (quote ("gnuplot" . gnuplot)))
    (add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
-   (setq org-plantuml-jar-path
-         (expand-file-name "/opt/plantuml/plantuml.jar"))
+   (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
+   (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_9.jar")
 
    ;; GTD stuff
-   (setq org-agenda-files (quote ("~/Dropbox/org/GTD/gtd.org")))
+   (setq org-todo-keywords
+         '((sequence "TODO" "STARTED" "PROGRESSING" "ALMOST" "DONE")))
+   (setq org-todo-keyword-faces
+         '(("TODO" . "#cc9393") ("STARTED" . "khaki") ("PROGRESSING" . "GreenYellow")
+           ("ALMOST" . "turquoise") ("DONE" . "#afd8af")))
+   (setq org-agenda-files (quote ("~/Dropbox/org/GTD/gtd.org" "~/Dropbox/org/notes/papers.org")))
    (setq my-inbox-org-file (concat org-directory "/GTD/inbox.org"))
    (setq org-default-notes-file my-inbox-org-file)
    (setq org-capture-templates
@@ -159,8 +166,8 @@
                               (diminish 'org-indent-mode)
                               (org-bullets-mode 1)))))
 
-;; UML from table
 (defun dia-from-table (table)
+  "UML graph from table"
   (cl-flet ((struct-name (x) (save-match-data
                                (and (string-match "\\(struct\\|class\\) \\([^ ]*\\)" x)
                                     (match-string 2 x)))))
@@ -181,3 +188,15 @@
                                                     lhead (replace-regexp-in-string
                                                            "\\W" "_" y) sname)))))
                             ltail))) table))))
+
+(defun my-org-link-from-maim ()
+  "screenshot inside org-mode"
+  (interactive)
+  (let* ((base "~/Dropbox/org/notes/")
+         (relative "assets/image/")
+         (file (concat relative (read-string "Name: ") ".png"))
+         (path (expand-file-name (concat base file)))
+         (res (call-process "maim" nil nil nil "-s" path)))
+    (if (= res 0)
+        (insert
+         (org-make-link-string (concat "file:./" file))))))

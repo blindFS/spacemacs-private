@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: begin
+# key: begin
+# --
+#+begin_${1:equation}
+#+end_$1

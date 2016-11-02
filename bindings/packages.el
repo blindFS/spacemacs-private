@@ -25,7 +25,7 @@ which require an initialization must be listed explicitly in the list.")
 (defun bindings/post-init-evil ()
   (evil-define-key 'normal global-map (kbd "gh") 'beginning-of-line)
   (evil-define-key 'normal global-map (kbd "gl") 'end-of-line)
-  (evil-define-key 'normal global-map (kbd "S") 'avy-goto-word-or-subword-1)
+  (evil-define-key 'normal global-map (kbd "f") 'avy-goto-word-or-subword-1)
   )
 
 ;; Often the body of an initialize function uses `use-package'

@@ -13,12 +13,12 @@
      )
 
    ;; options
-   (setq org-directory "~/Dropbox/org")
+   (setq org-directory "~/Dropbox/org/")
    (unless (file-exists-p org-directory)
      (make-directory org-directory))
 
    (setq org-tags-column -120)
-   (setq org-log-done t)
+   (setq org-log-done 'time)
    (setq org-completion-use-ido t)
 
    (setq org-hide-emphasis-markers t)
@@ -76,15 +76,15 @@
    (setq org-latex-caption-above nil)
    (require 'ox-publish)
    (setq org-publish-project-alist
-         '(("html"
-            :base-directory "~/Dropbox/org/notes"
+         `(("html"
+            :base-directory ,(concat org-directory "notes")
             :base-extension "org"
             :publishing-directory "~/Dropbox/Public/html"
             :publishing-function org-html-publish-to-html)
            ("pdf"
-            :base-directory "~/Dropbox/org/notes"
+            :base-directory ,(concat org-directory "notes")
             :base-extension "org"
-            :publishing-directory "~/Dropbox/org/pdf"
+            :publishing-directory ,(concat org-directory "pdf")
             :publishing-function org-latex-publish-to-pdf)
            ("all" :components ("html" "pdf"))))
 
@@ -114,21 +114,31 @@
 
    ;; GTD stuff
    (setq org-todo-keywords
-         '((sequence "TODO" "STARTED" "PROGRESSING" "ALMOST" "DONE")))
+         '((sequence "TODO(t)" "STARTED(s)" "PROGRESSING(p)" "ALMOST(a)" "DONE(d)")))
    (setq org-todo-keyword-faces
          '(("TODO" . "#cc9393") ("STARTED" . "khaki") ("PROGRESSING" . "GreenYellow")
            ("ALMOST" . "turquoise") ("DONE" . "#afd8af")))
-   (setq org-agenda-files (quote ("~/Dropbox/org/GTD/gtd.org" "~/Dropbox/org/notes/papers.org")))
+   (setq org-agenda-files `(,(concat org-directory "GTD/gtd.org")
+                            ,(concat org-directory "notes/papers.org")))
+   (require 'org-agenda)
+   (add-to-list 'org-agenda-custom-commands
+                '("W" "Weekly review"
+                  agenda ""
+                  ((org-agenda-span 'week)
+                   (org-agenda-start-on-weekday 0)
+                   (org-agenda-start-with-log-mode t)
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'nottodo 'done)))))
    (setq my-inbox-org-file (concat org-directory "/GTD/inbox.org"))
    (setq org-default-notes-file my-inbox-org-file)
    (setq org-capture-templates
-         '(("t" "Todo" entry (file+headline my-inbox-org-file "INBOX")
+         `(("t" "Todo" entry (file+headline my-inbox-org-file "INBOX")
             "* TODO %?\n%U\n%a\n")
            ("n" "Note" entry (file+headline my-inbox-org-file "NOTES")
             "* %? :NOTE:\n%U\n%a\n")
            ("m" "Meeting" entry (file my-inbox-org-file)
             "* MEETING %? :MEETING:\n%U")
-           ("j" "Journal" entry (file+datetree (concat org-directory "/GTD/journal.org"))
+           ("j" "Journal" entry (file+datetree ,(concat org-directory "/GTD/journal.org"))
             "* %?\n%U\n")))
 
    (setq org-use-fast-todo-selection t)
@@ -166,7 +176,7 @@
                               (diminish 'org-indent-mode)
                               (org-bullets-mode 1)))))
 
-(defun dia-from-table (table)
+(defun my-org-uml-from-table (table)
   "UML graph from table"
   (cl-flet ((struct-name (x) (save-match-data
                                (and (string-match "\\(struct\\|class\\) \\([^ ]*\\)" x)
@@ -189,14 +199,17 @@
                                                            "\\W" "_" y) sname)))))
                             ltail))) table))))
 
-(defun my-org-link-from-maim ()
+(defun my-org-figure-from-maim ()
   "screenshot inside org-mode"
   (interactive)
-  (let* ((base "~/Dropbox/org/notes/")
+  (let* ((base (concat org-directory "notes"))
          (relative "assets/image/")
          (file (concat relative (read-string "Name: ") ".png"))
          (path (expand-file-name (concat base file)))
-         (res (call-process "maim" nil nil nil "-s" path)))
+         (res (progn
+                (if (string-match-p "awesome" (getenv "XDG_SESSION_DESKTOP"))
+                    (call-process-shell-command "echo 'awful.client.focus.byidx(-1) if client.focus then client.focus:raise() end'|awesome-client" nil nil nil))
+                (call-process "maim" nil nil nil "-s" path))))
     (if (= res 0)
         (insert
          (org-make-link-string (concat "file:./" file))))))

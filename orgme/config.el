@@ -202,14 +202,15 @@
 (defun my-org-figure-from-maim ()
   "screenshot inside org-mode"
   (interactive)
-  (let* ((base (concat org-directory "notes"))
+  (let* ((base (concat org-directory "notes/"))
          (relative "assets/image/")
          (file (concat relative (read-string "Name: ") ".png"))
          (path (expand-file-name (concat base file)))
-         (res (progn
-                (if (string-match-p "awesome" (getenv "XDG_SESSION_DESKTOP"))
-                    (call-process-shell-command "echo 'awful.client.focus.byidx(-1) if client.focus then client.focus:raise() end'|awesome-client" nil nil nil))
-                (call-process "maim" nil nil nil "-s" path))))
+         (res (if (or (not (file-exists-p path)) (y-or-n-p "file already exists, override? "))
+                  (progn
+                    (if (string-match-p "awesome" (getenv "XDG_SESSION_DESKTOP"))
+                        (call-process-shell-command "echo 'awful.client.focus.byidx(-1) if client.focus then client.focus:raise() end'|awesome-client" nil nil nil))
+                    (call-process "maim" nil nil nil "-s" path)) 0)))
     (if (= res 0)
         (insert
          (org-make-link-string (concat "file:./" file))))))

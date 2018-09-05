@@ -47,6 +47,7 @@
   (setq yas-fallback-behavior 'return-nil)
   (setq yas-also-auto-indent-first-line t)
   (setq yas-prompt-functions '(yas/ido-prompt yas/completing-prompt))
+  (setq yas-snippet-dirs (remove 'yas-installed-snippets-dir yas-snippet-dirs))
   ;; (yas-reload-all)
   )
 

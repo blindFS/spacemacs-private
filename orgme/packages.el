@@ -15,6 +15,7 @@
     graphviz-dot-mode
     gnuplot-mode
     org-ref
+    org-download
     )
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
@@ -33,6 +34,12 @@ which require an initialization must be listed explicitly in the list.")
   (use-package gnuplot-mode
     :ensure t
     :mode "\\.plt"))
+
+(defun orgme/post-init-org-download ()
+  (setq-default org-download-image-dir "~/Dropbox/org/notes/assets/image/")
+  (setq org-download-screenshot-method "maim -s")
+  (setq org-download-timestamp "")
+  )
 
 (defun orgme/post-init-org-ref ()
   (setq

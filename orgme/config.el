@@ -56,6 +56,8 @@
 
    ;; for latex export
    (setq org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                                 "bibtex %b"
+                                 "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
                                  "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
    ;; (setq org-latex-to-pdf-process '("latexmk -pdf %f"))
 
@@ -65,6 +67,7 @@
    (setq org-latex-minted-options
          '(("fontsize" "\\small")("obeytabs" "true")))
    (add-to-list 'org-latex-packages-alist '("" "minted" nil))
+   (add-to-list 'org-latex-packages-alist '("" "animate" nil))
    (add-to-list 'org-latex-packages-alist '("" "zhfontcfg" nil))
    (add-to-list 'org-latex-packages-alist '("" "mathpazo" t))
    ;; make math equations larger
@@ -99,7 +102,7 @@
    (org-babel-do-load-languages
     'org-babel-load-languages
     '((dot . t)
-      (sh . t)
+      (shell . t)
       (R . t)
       (scala . t)
       (ditaa . t)
@@ -110,7 +113,7 @@
    (add-to-list 'org-src-lang-modes (quote ("gnuplot" . gnuplot)))
    (add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
    (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
-   (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_9.jar")
+   (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
 
    ;; GTD stuff
    (setq org-todo-keywords

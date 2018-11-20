@@ -12,8 +12,8 @@
 
 (defvar fp-packages
   '(
+    proof-general
     company-coq
-    sml-mode
     scheme-complete
     paredit
     evil-paredit
@@ -24,19 +24,24 @@
 (defvar fp-excluded-packages '()
   "List of packages to exclude.")
 
+(defun fp/init-proof-general ()
+  "Initialize Proof General"
+  (use-package proof-site
+    :defer t
+    :mode ("\\.v\\'" . coq-mode)
+    :load-path
+    "~/.emacs.d/lisp/PG/generic"))
+
 (defun fp/init-company-coq ()
   (use-package company-coq
     :ensure t
+    :defer t
     :init
     (progn
       (setq company-coq-prettify-symbols nil)
       (setq company-coq-autocomplete-symbols nil)
-      (add-hook 'coq-mode-hook 'company-coq-initialize))))
-
-(defun fp/init-sml-mode ()
-  (use-package sml-mode
-    :ensure t
-    :mode "\\.sml$"))
+      (add-hook 'coq-mode-hook 'company-coq-initialize))
+  ))
 
 (defun fp/init-scheme-complete ()
   (use-package scheme-complete

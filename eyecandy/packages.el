@@ -20,6 +20,7 @@
     auto-dim-other-buffers
     git-gutter-fringe+
     all-the-icons
+    ;; spaceline-all-the-icons
     )
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
@@ -134,6 +135,13 @@ what file icon to use."
           (neo-buffer--node-list-set nil node)
           (neo-buffer--newline-and-begin)))
       )))
+
+(defun eyecandy/init-spaceline-all-the-icons ()
+  (use-package spaceline-all-the-icons
+    :ensure t
+    :after spaceline
+    :config
+    (spaceline-all-the-icons-theme)))
 
 ;; Often the body of an initialize function uses `use-package'
 ;; For more info on `use-package', see readme:

@@ -4,8 +4,8 @@
    ;; evil key bindings
    (evil-define-key 'normal org-mode-map
      (kbd "RET")   'org-open-at-point
-     (kbd "zO")    'show-all
-     (kbd "zC")    'hide-all
+     (kbd "zO")    'outline-show-all
+     (kbd "zC")    'outline-hide-body
      (kbd "<tab>") 'org-cycle
      )
    (evil-define-key 'insert org-mode-map
@@ -36,7 +36,7 @@
    (setq org-src-fontify-natively t)
    (setq org-file-apps '((auto-mode . emacs)
                          ("\\.x?html?\\'" . default)
-                         ("\\.pdf\\'" . "zathura %s")
+                         ("\\.pdf\\'" . "open %s")
                          ))
 
    (require 'ox-latex)
@@ -71,7 +71,8 @@
    (add-to-list 'org-latex-packages-alist '("" "zhfontcfg" nil))
    (add-to-list 'org-latex-packages-alist '("" "mathpazo" t))
    ;; make math equations larger
-   (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
+   (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.0))
+   (setq org-latex-create-formula-image-program 'dvisvgm)
 
    ;; export options
    (setq org-export-with-sub-superscripts '{})
@@ -103,8 +104,6 @@
     'org-babel-load-languages
     '((dot . t)
       (shell . t)
-      (R . t)
-      (scala . t)
       (ditaa . t)
       (gnuplot . t)
       (plantuml . t)))
@@ -112,15 +111,16 @@
    (add-to-list 'org-src-lang-modes (quote ("dot2tex" . graphviz-dot)))
    (add-to-list 'org-src-lang-modes (quote ("gnuplot" . gnuplot)))
    (add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
-   (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
-   (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_10.jar")
+   (setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/1.2018.10/libexec/plantuml.jar")
+   (setq org-ditaa-jar-path "/usr/local/Cellar/ditaa/0.11.0/libexec/ditaa-0.11.0-standalone.jar")
 
    ;; GTD stuff
    (setq org-todo-keywords
-         '((sequence "TODO(t)" "STARTED(s)" "PROGRESSING(p)" "ALMOST(a)" "DONE(d)")))
+         '((sequence "TODO(t)" "STARTED(s)" "PROGRESSING(p)" "ALMOST(a)" "|" "DONE(d)" "ABORTED(b)")))
    (setq org-todo-keyword-faces
          '(("TODO" . "#cc9393") ("STARTED" . "khaki") ("PROGRESSING" . "GreenYellow")
-           ("ALMOST" . "turquoise") ("DONE" . "#afd8af")))
+           ("ALMOST" . "turquoise") ("DONE" . (:inherit org-done :foreground "#afd8af"))
+           ("ABORTED" . (:inherit org-done :foreground "OrangeRed"))))
    (setq org-agenda-files `(,(concat org-directory "GTD/gtd.org")
                             ,(concat org-directory "notes/papers.org")))
    (require 'org-agenda)
@@ -202,18 +202,23 @@
                                                            "\\W" "_" y) sname)))))
                             ltail))) table))))
 
-(defun my-org-figure-from-maim ()
+(defun my-org-figure-from-screenshot ()
   "screenshot inside org-mode"
   (interactive)
-  (let* ((base (concat org-directory "notes/"))
-         (relative "assets/image/")
-         (file (concat relative (read-string "Name: ") ".png"))
-         (path (expand-file-name (concat base file)))
+  (let* ((base org-download-image-dir)
+         (file (concat base (read-string "Name: ")))
+         (path (expand-file-name (concat file ".png")))
+         (path2x (expand-file-name (concat file "@2x.png")))
          (res (if (or (not (file-exists-p path)) (y-or-n-p "file already exists, override? "))
                   (progn
-                    (if (string-match-p "awesome" (getenv "XDG_SESSION_DESKTOP"))
-                        (call-process-shell-command "echo 'awful.client.focus.byidx(-1) if client.focus then client.focus:raise() end'|awesome-client" nil nil nil))
-                    (call-process "maim" nil nil nil "-s" path)) 0)))
+                    (if (string-equal system-type "darwin")
+                        (do-applescript "tell application \"Emacs\" to set miniaturized of window 1 to true"))
+                    (call-process "screencapture" nil nil nil "-s" path2x)
+                    (call-process-shell-command "convert" nil nil nil
+                                  (concat " -scale 50% -quality 100% " path2x " " path))
+                    (if (string-equal system-type "darwin")
+                        (do-applescript "tell application \"Emacs\" to set miniaturized of window 1 to false"))
+                    0))))
     (if (= res 0)
         (insert
-         (org-make-link-string (concat "file:./" file))))))
+         (org-make-link-string (concat "file:" file ".png"))))))

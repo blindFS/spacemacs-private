@@ -12,7 +12,6 @@
 
 (defvar fp-pre-extensions
   '(
-    ;; pre extension fps go here
     )
   "List of all extensions to load before the packages.")
 

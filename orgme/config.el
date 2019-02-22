@@ -8,9 +8,8 @@
      (kbd "zC")    'outline-hide-body
      (kbd "<tab>") 'org-cycle
      )
-   (evil-define-key 'insert org-mode-map
-     (kbd "<tab>") 'org-table-next-field
-     )
+   ;; (evil-define-key 'insert org-mode-map
+   ;;   (kbd "<tab>") 'org-table-next-field)
 
    ;; options
    (setq org-directory "~/Dropbox/org/")
@@ -21,9 +20,32 @@
    (setq org-log-done 'time)
    (setq org-completion-use-ido t)
 
+   (setq org-emphasis-alist
+         (quote
+          (("*" org-bold)
+           ("/" org-italic)
+           ("_" underline)
+           ("=" org-verbatim verbatim)
+           ("~" org-code verbatim)
+           ("+" org-strike))))
+   (defface org-bold
+     '((t :background "salmon"
+          :foreground "black"
+          :inherit bold))
+     "Org-mode emphasis bold."
+     :group 'org-faces)
+   (defface org-italic
+     '((t :background "pale green"
+          :foreground "black"
+          :inherit italic))
+     "Org-mode emphasis italic."
+     :group 'org-faces)
+   (defface org-strike
+     '((t :strike-through t))
+     "Org-mode emphasis strike-through."
+     :group 'org-faces)
    (setq org-hide-emphasis-markers t)
    (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n")
-   (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist))
 
    (setq org-startup-indented t)
    (setq org-startup-folded t)
@@ -31,6 +53,7 @@
 
    (setq org-startup-with-latex-preview t)
    (setq org-startup-with-inline-images t)
+   (setq org-startup-truncated t)
    (setq org-pretty-entities t)
    (setq org-pretty-entities-include-sub-superscripts nil)
    (setq org-src-fontify-natively t)

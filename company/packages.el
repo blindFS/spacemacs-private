@@ -15,6 +15,7 @@
     company
     yasnippet
     smartparens
+    helm-rg
     )
   "List of all packages to install and/or initialize. Built-in packages
    which require an initialization must be listed explicitly in the list.")
@@ -23,6 +24,10 @@
   '()
   "List of packages to exclude."
   )
+
+(defun company/init-helm-rg ()
+  (use-package helm-rg
+    :ensure t))
 
 (defun company/post-init-company ()
   (global-company-mode t)

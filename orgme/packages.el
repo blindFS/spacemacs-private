@@ -16,6 +16,7 @@
     gnuplot-mode
     org-ref
     org-download
+    anki-editor
     )
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
@@ -34,6 +35,10 @@ which require an initialization must be listed explicitly in the list.")
   (use-package gnuplot-mode
     :ensure t
     :mode "\\.plt"))
+
+(defun orgme/init-anki-editor ()
+  (use-package anki-editor
+    :ensure t))
 
 (defun orgme/post-init-org-download ()
   (setq-default org-download-image-dir "~/Dropbox/org/notes/assets/image/")

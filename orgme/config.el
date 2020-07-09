@@ -29,14 +29,12 @@
            ("~" org-code verbatim)
            ("+" org-strike))))
    (defface org-bold
-     '((t :background "salmon"
-          :foreground "black"
+     '((t :foreground "salmon"
           :inherit bold))
      "Org-mode emphasis bold."
      :group 'org-faces)
    (defface org-italic
-     '((t :background "pale green"
-          :foreground "black"
+     '((t :foreground "pale green"
           :inherit italic))
      "Org-mode emphasis italic."
      :group 'org-faces)
@@ -47,11 +45,16 @@
    (setq org-hide-emphasis-markers t)
    (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\n")
 
+   ;; Valign.el
+   (load-file (concat spacemacs-start-directory "private/orgme/valign/valign.el"))
+   (add-hook 'org-mode-hook #'valign-mode)
+   (diminish 'valign-mode)
+
    (setq org-startup-indented t)
-   (setq org-startup-folded t)
+   (setq org-startup-folded nil)
    (setq org-indent-indentation-per-level 1)
 
-   (setq org-startup-with-latex-preview t)
+   (setq org-startup-with-latex-preview nil)
    (setq org-startup-with-inline-images t)
    (setq org-startup-truncated t)
    (setq org-pretty-entities t)
@@ -92,6 +95,7 @@
    (add-to-list 'org-latex-packages-alist '("" "minted" nil))
    (add-to-list 'org-latex-packages-alist '("" "animate" nil))
    (add-to-list 'org-latex-packages-alist '("" "zhfontcfg" nil))
+   (add-to-list 'org-latex-packages-alist '("" "unicode-math" nil))
    (add-to-list 'org-latex-packages-alist '("" "mathpazo" t))
    ;; make math equations larger
    (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.0))
@@ -102,6 +106,7 @@
    (setq org-export-with-section-numbers t)
    (setq org-latex-caption-above nil)
    (require 'ox-publish)
+   (setq org-export-use-babel nil)
    (setq org-publish-project-alist
          `(("html"
             :base-directory ,(concat org-directory "notes")
@@ -146,15 +151,28 @@
            ("ABORTED" . (:inherit org-done :foreground "OrangeRed"))))
    (setq org-agenda-files `(,(concat org-directory "GTD/gtd.org")
                             ,(concat org-directory "notes/papers.org")))
+
    (require 'org-agenda)
+   (setq org-agenda-log-mode-items '(closed clock state))
    (add-to-list 'org-agenda-custom-commands
                 '("W" "Weekly review"
                   agenda ""
                   ((org-agenda-span 'week)
                    (org-agenda-start-on-weekday 0)
-                   (org-agenda-start-with-log-mode t)
+                   (org-agenda-start-with-log-mode 1)
                    (org-agenda-skip-function
-                    '(org-agenda-skip-entry-if 'nottodo 'done)))))
+                    '(org-agenda-skip-entry-if 'nottodo 'done))
+                   )))
+
+   (add-to-list 'org-agenda-custom-commands
+                '("H" "Half-monthly review"
+                  agenda ""
+                  ((org-agenda-span 14)
+                   (org-agenda-start-on-weekday nil)
+                   (org-agenda-start-with-log-mode 1)
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'nottodo 'done))
+                   )))
    (setq my-inbox-org-file (concat org-directory "/GTD/inbox.org"))
    (setq org-default-notes-file my-inbox-org-file)
    (setq org-capture-templates

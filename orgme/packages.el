@@ -16,7 +16,7 @@
     gnuplot-mode
     org-ref
     org-download
-    anki-editor
+    smart-input-source
     )
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
@@ -31,14 +31,26 @@ which require an initialization must be listed explicitly in the list.")
     :ensure t
     :mode "\\.dot$"))
 
+(defun orgme/init-smart-input-source ()
+  (use-package smart-input-source
+    :ensure t
+    :init
+    (setq-default smart-input-source-english "com.apple.keylayout.ABC")
+    (setq-default smart-input-source-other "com.apple.inputmethod.SCIM.ITABC")
+    :config
+    ;; enable the /cursor color/ mode
+    (smart-input-source-global-cursor-color-mode t)
+    ;; enable the /respect/ mode
+    (smart-input-source-global-respect-mode t)
+    ;; enable the /follow context/ mode for all buffers
+    (smart-input-source-global-follow-context-mode t)
+    ;; enable the /inline english/ mode for all buffers
+    (smart-input-source-global-inline-mode t)))
+
 (defun orgme/init-gnuplot-mode ()
   (use-package gnuplot-mode
     :ensure t
     :mode "\\.plt"))
-
-(defun orgme/init-anki-editor ()
-  (use-package anki-editor
-    :ensure t))
 
 (defun orgme/post-init-org-download ()
   (setq-default org-download-image-dir "~/Dropbox/org/notes/assets/image/")

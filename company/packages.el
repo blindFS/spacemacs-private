@@ -13,6 +13,7 @@
 (defvar company-packages
   '(
     company
+    company-math
     yasnippet
     smartparens
     helm-rg
@@ -43,6 +44,14 @@
   (defadvice company-complete-common (around advice-for-company-complete-common activate)
     (when (null (yas-expand))
       ad-do-it)))
+
+(defun company/init-company-math ()
+  (use-package company-math
+    :ensure t
+    :config
+    (defun my-cp-math-hook ()
+      (setq-local company-backends (append '((company-math-symbols-unicode company-latex-commands)) company-backends)))
+    (add-hook 'org-mode-hook 'my-cp-math-hook t)))
 
 (defun company/post-init-yasnippet ()
   (evil-define-key 'insert global-map (kbd "C-k") 'yas-insert-snippet)

@@ -26,6 +26,7 @@ which require an initialization must be listed explicitly in the list.")
   (evil-define-key 'normal global-map (kbd "gh") 'beginning-of-line)
   (evil-define-key 'normal global-map (kbd "gl") 'end-of-line)
   (evil-define-key 'normal global-map (kbd "f") 'avy-goto-word-or-subword-1)
+  (evil-define-key 'normal global-map (kbd "ga") (lambda () (interactive) (what-cursor-position t)))
   )
 
 ;; Often the body of an initialize function uses `use-package'
